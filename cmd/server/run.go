@@ -9,14 +9,12 @@ import (
 	"syscall"
 	"time"
 
-	_ "net/http/pprof"
-
-	"github.com/spf13/cobra"
-
 	"github.com/juicity/juicity/cmd/internal/shared"
 	"github.com/juicity/juicity/config"
 	"github.com/juicity/juicity/pkg/log"
 	"github.com/juicity/juicity/server"
+
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -43,12 +41,6 @@ var (
 					Err(err).
 					Msg("Failed to init logger")
 			}
-
-			// QUIC_GO_ENABLE_GSO
-			gso, _ := strconv.ParseBool(os.Getenv("QUIC_GO_ENABLE_GSO"))
-			logger.Info().
-				Bool("Requested QUIC_GO_ENABLE_GSO", gso).
-				Send()
 
 			go func() {
 				if err := Serve(conf); err != nil {
@@ -81,13 +73,15 @@ func Serve(conf *config.Config) (err error) {
 		}
 	}
 	s, err := server.New(&server.Options{
-		Logger:            logger,
-		Users:             conf.Users,
-		Certificate:       conf.Certificate,
-		PrivateKey:        conf.PrivateKey,
-		CongestionControl: conf.CongestionControl,
-		Fwmark:            int(fwmark),
-		SendThrough:       conf.SendThrough,
+		Logger:                logger,
+		Users:                 conf.Users,
+		Certificate:           conf.Certificate,
+		PrivateKey:            conf.PrivateKey,
+		CongestionControl:     conf.CongestionControl,
+		Fwmark:                int(fwmark),
+		SendThrough:           conf.SendThrough,
+		DialerLink:            conf.DialerLink,
+		DisableOutboundUdp443: conf.DisableOutboundUdp443,
 	})
 	if err != nil {
 		return err
@@ -103,6 +97,9 @@ func Serve(conf *config.Config) (err error) {
 }
 
 func init() {
+	// version
+	rootCmd.Version = shared.GetVersion(cgoEnabled)
+
 	// cmds
 	rootCmd.AddCommand(runCmd)
 

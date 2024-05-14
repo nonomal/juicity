@@ -22,6 +22,18 @@ make CGO_ENABLED=0 juicity-server
 ./juicity-server run -c config.json
 ```
 
+Or with Docker
+
+```
+docker run --name juicity \
+  --restart always \
+  --network host \
+  -v /path/to/config.json:/etc/juicity/server.json \
+  -v /path/to/fullchain.cer:/path/to/fullchain.cer \
+  -v /path/to/private.key:/path/to/private.key \
+  -dit ghcr.io/juicity/juicity:main
+```
+
 ## Configuration
 
 Mini configuration:
@@ -35,6 +47,7 @@ Mini configuration:
   "certificate": "/path/to/fullchain.cer",
   "private_key": "/path/to/private.key",
   "congestion_control": "bbr",
+  "disable_outbound_udp443": true,
   "log_level": "info"
 }
 ```
@@ -50,16 +63,19 @@ Full configuration:
   "certificate": "/path/to/fullchain.cer",
   "private_key": "/path/to/private.key",
   "congestion_control": "bbr",
+  "log_level": "info",
   "fwmark": "0x1000",
   "send_through": "113.25.132.3",
-  "log_level": "info"
+  "dialer_link": "socks5://127.0.0.1:1080",
+  "disable_outbound_udp443": true
 }
 ```
 
-- Optional values of `congestion_control`: cubic, bbr, new_reno.
+- `congestion_control`: one of cubic, bbr, new_reno.
 - `fwmark` is useful for iptables/nft.
 - `send_through` is the interface IP to specify to use.
-- Set environment variable `QUIC_GO_ENABLE_GSO=true` to enable GSO, which can greatly improve the performance of sending and receiving packets. Notice that this option needs the support of NIC features. See more: <https://github.com/juicity/juicity/discussions/42>
+- `dialer_link` can be extreme flexible. Juicity support many protocols, even proxy chains. See [proxy-protocols](https://github.com/daeuniverse/dae/blob/main/docs/en/proxy-protocols.md) [中文](https://github.com/daeuniverse/dae/blob/main/docs/zh/proxy-protocols.md).
+- `disable_outbound_udp443`: usually quic traffic. Suggest to disable it because quic usually consumes too much cpu/mem resources.
 
 ## Arguments
 
@@ -90,7 +106,7 @@ Also see [#63](https://github.com/juicity/juicity/issues/63)
 ## Generate ShareLink
 
 ```bash
-juicity-server generate-sharinglink -c /etc/juicity/server.json
+juicity-server generate-sharelink -c /etc/juicity/server.json
 # output
 juicity://00000000-0000-0000-0000-000000000000:mypassword@1.2.3.4:15333?congestion_control=bbr&pinned_certchain_sha256=5ykL73pOK7NAu92A48dCrFjDqDowdChUSmlpQzudmvc%3D&sni=example.com
 ```

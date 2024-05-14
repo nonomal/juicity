@@ -16,15 +16,16 @@ Juicity is implemented with the following goals:
 - [x] More stable.
 - [x] More actively maintained.
 - [x] Better UDP implementation.
-- [x] Better compatibility and consistency with clients in golang.
+- [x] Better compatibility and consistency with clients in Golang.
 
 ## [juicity-server](cmd/server/README.md)
 
 ## Client
 
-- [juicity/juicity-client](cmd/client/README.md) (Official)
-- [daeuniverse/dae](https://github.com/daeuniverse/dae) (Official, Linux Only)
-- [daeuniverse/daed](https://github.com/daeuniverse/daed) (Official, Linux Only)
+- [juicity/juicity-client](cmd/client/README.md) <img src="https://www.v2fly.org/tools/win.svg" height=16/><img src="https://www.v2fly.org/tools/linux.svg" height=16/><img src="https://www.v2fly.org/tools/apple.svg" height=16/> (CLI)
+- [daeuniverse/dae](https://github.com/daeuniverse/dae) <img src="https://www.v2fly.org/tools/linux.svg" height=16/> (CLI)
+- [daeuniverse/daed](https://github.com/daeuniverse/daed) <img src="https://www.v2fly.org/tools/linux.svg" height=16/> (Web UI)
+- [v2rayA/v2rayA](https://github.com/v2rayA/v2rayA) <img src="https://www.v2fly.org/tools/win.svg" height=16/><img src="https://www.v2fly.org/tools/linux.svg" height=16/><img src="https://www.v2fly.org/tools/apple.svg" height=16/> (Web UI)
 
 ## Link Format
 
@@ -39,6 +40,10 @@ Mini parameters:
 ```shell
 juicity://uuid:password@example.com:port?congestion_control=bbr
 ```
+
+## Juicity Specification
+
+About the specification of the protocol, you can find it [here](docs/spec_en.md).
 
 ## License
 
